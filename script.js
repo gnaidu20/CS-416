@@ -1,4 +1,4 @@
-// to render the visualizations
+// script.js
 document.addEventListener("DOMContentLoaded", function () {
     const scenes = document.querySelectorAll(".scene");
     let currentScene = 0;
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Wait until the data is loaded
-    d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
+    d3.csv("cars2017.csv").then(function(data) {
         // Scene 1: Overview
         const svg1 = d3.select("#chart1").append("svg");
         const width = 800;
