@@ -69,16 +69,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateScatterPlot(selectedFuels) {
         const svg3 = d3.select("#chart3 svg");
+        const filteredData = carData.filter(d => selectedFuels.includes(d.Fuel));
+
         svg3.selectAll("circle")
-            .data(carData.filter(d => selectedFuels.includes(d.Fuel)))
-            .join("circle")
-            .attr("cx", d => x3(d.AverageCityMPG))
-            .attr("cy", d => y3(d.AverageHighwayMPG))
-            .attr("r", 5)
-            .attr("fill", d => colorScale(d.Fuel))
-            .on("mouseover", showTooltip)
-            .on("mousemove", showTooltip)
-            .on("mouseout", hideTooltip);
+            .data(filteredData, d => d.Make)
+            .join(
+                enter => enter.append("circle")
+                    .attr("cx", d => x3(d.AverageCityMPG))
+                    .attr("cy", d => y3(d.AverageHighwayMPG))
+                    .attr("r", 5)
+                    .attr("fill", d => colorScale(d.Fuel))
+                    .on("mouseover", showTooltip)
+                    .on("mousemove", showTooltip)
+                    .on("mouseout", hideTooltip),
+                update => update
+                    .transition().duration(500)
+                    .attr("cx", d => x3(d.AverageCityMPG))
+                    .attr("cy", d => y3(d.AverageHighwayMPG))
+                    .attr("fill", d => colorScale(d.Fuel)),
+                exit => exit.remove()
+            );
     }
 
     d3.csv("cars2017.csv").then(function(data) {
