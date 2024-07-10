@@ -22,6 +22,26 @@ document.addEventListener("DOMContentLoaded", function () {
         tooltip.transition().duration(500).style("opacity", 0);
     }
 
+    function addLegend(svg, color, width, height, margin) {
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${width - margin.right - 100}, ${margin.top})`);
+
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 10)
+            .attr("height", 10)
+            .style("fill", color);
+
+        legend.append("text")
+            .attr("x", 20)
+            .attr("y", 10)
+            .attr("dy", "0.32em")
+            .text("Car Data")
+            .style("fill", "white");
+    }
+
     // Wait until the data is loaded
     d3.csv("cars2017.csv").then(function(data) {
         // Scene 1: Overview
@@ -56,14 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         svg1.append("g")
             .call(d3.axisLeft(y1))
-            .attr("transform", `translate(${margin.left},0)`);
+            .attr("transform", `translate(${margin.left},0)`)
+            .style("color", "white");
 
         svg1.append("g")
             .call(d3.axisBottom(x1))
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .selectAll("text")
             .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .style("color", "white");
+
+        addLegend(svg1, "steelblue", width, height, margin);
 
         // Scene 2: Engine Cylinders Distribution
         const svg2 = d3.select("#chart2").append("svg")
@@ -93,14 +117,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         svg2.append("g")
             .call(d3.axisLeft(y2))
-            .attr("transform", `translate(${margin.left},0)`);
+            .attr("transform", `translate(${margin.left},0)`)
+            .style("color", "white");
 
         svg2.append("g")
             .call(d3.axisBottom(x2))
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .selectAll("text")
             .attr("transform", "rotate(-45)")
-            .style("text-anchor", "end");
+            .style("text-anchor", "end")
+            .style("color", "white");
+
+        addLegend(svg2, "orange", width, height, margin);
 
         // Scene 3: City MPG vs Highway MPG
         const svg3 = d3.select("#chart3").append("svg")
@@ -128,10 +156,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         svg3.append("g")
             .call(d3.axisLeft(y3))
-            .attr("transform", `translate(${margin.left},0)`);
+            .attr("transform", `translate(${margin.left},0)`)
+            .style("color", "white");
 
         svg3.append("g")
             .call(d3.axisBottom(x3))
-            .attr("transform", `translate(0,${height - margin.bottom})`);
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .style("color", "white");
+
+        addLegend(svg3, "green", width, height, margin);
     });
 });
