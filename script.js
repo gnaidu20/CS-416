@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function addLegend(svg, colorScale, width, height, margin) {
         const legend = svg.append("g")
             .attr("class", "legend")
-            .attr("transform", `translate(${width - margin.right - 100}, ${margin.top})`);
+            .attr("transform", `translate(${width - margin.right - 120}, ${margin.top})`);
 
         const fuelTypes = colorScale.domain();
         const legendHeight = 20;
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "x label")
             .attr("text-anchor", "middle")
             .attr("x", width / 2)
-            .attr("y", height - margin.bottom / 2)
+            .attr("y", height - margin.bottom / 3)
             .style("fill", "white")
             .text(xlabel);
 
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "y label")
             .attr("text-anchor", "middle")
             .attr("x", -height / 2)
-            .attr("y", margin.left / 2)
+            .attr("y", margin.left / 4)
             .attr("dy", "-0.75em")
             .attr("transform", "rotate(-90)")
             .style("fill", "white")
@@ -75,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Scene 1: Overview
         const svg1 = d3.select("#chart1").append("svg");
-        const width = 800;
-        const height = 400;
-        const margin = {top: 20, right: 30, bottom: 50, left: 50};
+        const width = 900;
+        const height = 500;
+        const margin = {top: 20, right: 150, bottom: 80, left: 60};
 
         svg1.attr("viewBox", [0, 0, width, height]);
 
