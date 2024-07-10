@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showTooltip(event, d) {
         tooltip.transition().duration(200).style("opacity", .9);
-        tooltip.html(`Make: ${d.Make}<br>Fuel: ${d.Fuel}<br>Highway MPG: ${d.AverageHighwayMPG}<br>City MPG: ${d.AverageCityMPG}`)
+        tooltip.html(`Make: ${d.Make}<br>Fuel: ${d.Fuel}<br>Engine Cylinders: ${d.EngineCylinders}<br>Highway MPG: ${d.AverageHighwayMPG}<br>City MPG: ${d.AverageCityMPG}`)
             .style("left", (event.pageX + 5) + "px")
             .style("top", (event.pageY - 28) + "px");
     }
