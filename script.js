@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showTooltip(event, d) {
         tooltip.transition().duration(200).style("opacity", .9);
-        tooltip.html(`Make: ${d.Make}<br>Highway MPG: ${d.AverageHighwayMPG}<br>City MPG: ${d.AverageCityMPG}`)
+        tooltip.html(`Make: ${d.Make}<br>Fuel: ${d.Fuel}<br>Highway MPG: ${d.AverageHighwayMPG}<br>City MPG: ${d.AverageCityMPG}`)
             .style("left", (event.pageX + 5) + "px")
             .style("top", (event.pageY - 28) + "px");
     }
@@ -22,28 +22,37 @@ document.addEventListener("DOMContentLoaded", function () {
         tooltip.transition().duration(500).style("opacity", 0);
     }
 
-    function addLegend(svg, color, width, height, margin) {
+    function addLegend(svg, colorScale, width, height, margin) {
         const legend = svg.append("g")
             .attr("class", "legend")
             .attr("transform", `translate(${width - margin.right - 100}, ${margin.top})`);
 
-        legend.append("rect")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", 10)
-            .attr("height", 10)
-            .style("fill", color);
+        const fuelTypes = colorScale.domain();
+        const legendHeight = 20;
 
-        legend.append("text")
-            .attr("x", 20)
-            .attr("y", 10)
-            .attr("dy", "0.32em")
-            .text("Car Data")
-            .style("fill", "white");
+        fuelTypes.forEach((fuel, i) => {
+            legend.append("rect")
+                .attr("x", 0)
+                .attr("y", i * legendHeight)
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("fill", colorScale(fuel));
+
+            legend.append("text")
+                .attr("x", 20)
+                .attr("y", i * legendHeight + 10)
+                .attr("dy", "0.32em")
+                .text(fuel)
+                .style("fill", "white");
+        });
     }
 
     // Wait until the data is loaded
     d3.csv("cars2017.csv").then(function(data) {
+        const colorScale = d3.scaleOrdinal()
+            .domain(["Gasoline", "Diesel", "Electricity"])
+            .range(["steelblue", "orange", "green"]);
+
         // Scene 1: Overview
         const svg1 = d3.select("#chart1").append("svg");
         const width = 800;
@@ -62,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .range([height - margin.bottom, margin.top]);
 
         svg1.append("g")
-            .attr("fill", "steelblue")
             .selectAll("rect")
             .data(data)
             .join("rect")
@@ -70,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("y", d => y1(d.AverageHighwayMPG))
             .attr("height", d => y1(0) - y1(d.AverageHighwayMPG))
             .attr("width", x1.bandwidth())
+            .attr("fill", d => colorScale(d.Fuel))
             .on("mouseover", showTooltip)
             .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
@@ -87,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("text-anchor", "end")
             .style("color", "white");
 
-        addLegend(svg1, "steelblue", width, height, margin);
+        addLegend(svg1, colorScale, width, height, margin);
 
         // Scene 2: Engine Cylinders Distribution
         const svg2 = d3.select("#chart2").append("svg")
@@ -103,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .range([height - margin.bottom, margin.top]);
 
         svg2.append("g")
-            .attr("fill", "orange")
             .selectAll("rect")
             .data(data)
             .join("rect")
@@ -111,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("y", d => y2(d.EngineCylinders))
             .attr("height", d => y2(0) - y2(d.EngineCylinders))
             .attr("width", x2.bandwidth())
+            .attr("fill", d => colorScale(d.Fuel))
             .on("mouseover", showTooltip)
             .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
@@ -128,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("text-anchor", "end")
             .style("color", "white");
 
-        addLegend(svg2, "orange", width, height, margin);
+        addLegend(svg2, colorScale, width, height, margin);
 
         // Scene 3: City MPG vs Highway MPG
         const svg3 = d3.select("#chart3").append("svg")
@@ -149,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("cx", d => x3(d.AverageCityMPG))
             .attr("cy", d => y3(d.AverageHighwayMPG))
             .attr("r", 5)
-            .attr("fill", "green")
+            .attr("fill", d => colorScale(d.Fuel))
             .on("mouseover", showTooltip)
             .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
@@ -164,6 +173,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .style("color", "white");
 
-        addLegend(svg3, "green", width, height, margin);
+        addLegend(svg3, colorScale, width, height, margin);
     });
 });
