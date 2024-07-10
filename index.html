@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CS-416 Cars 2017 Narrative Visualization Project</title>
+    <title>Narrative Visualization</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         body {
@@ -40,10 +40,13 @@
         .legend rect {
             stroke-width: 2;
         }
+        .controls {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1> 2017 Car Performance: Make, Fuel Efficiency and Engine Insight Story</h1>
+    <h1>Unveiling 2017 Car Performance: A Fuel Efficiency and Engine Insight Story</h1>
     <div id="scene1" class="scene active">
         <h2>Scene 1: Overview of Car Data</h2>
         <div id="chart1"></div>
@@ -56,6 +59,11 @@
     </div>
     <div id="scene3" class="scene">
         <h2>Scene 3: City MPG vs Highway MPG</h2>
+        <div class="controls">
+            <label><input type="checkbox" class="fuel-type" value="Gasoline" checked> Gasoline</label>
+            <label><input type="checkbox" class="fuel-type" value="Diesel" checked> Diesel</label>
+            <label><input type="checkbox" class="fuel-type" value="Electricity" checked> Electricity</label>
+        </div>
         <div id="chart3"></div>
         <div id="legend3" class="legend"></div>
     </div>
