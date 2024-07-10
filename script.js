@@ -50,18 +50,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function addAxisLabels(svg, width, height, margin, xlabel, ylabel) {
         svg.append("text")
             .attr("class", "x label")
-            .attr("text-anchor", "end")
+            .attr("text-anchor", "middle")
             .attr("x", width / 2)
-            .attr("y", height - 6)
+            .attr("y", height - margin.bottom / 2)
             .style("fill", "white")
             .text(xlabel);
 
         svg.append("text")
             .attr("class", "y label")
-            .attr("text-anchor", "end")
+            .attr("text-anchor", "middle")
             .attr("x", -height / 2)
-            .attr("y", 6)
-            .attr("dy", ".75em")
+            .attr("y", margin.left / 2)
+            .attr("dy", "-0.75em")
             .attr("transform", "rotate(-90)")
             .style("fill", "white")
             .text(ylabel);
