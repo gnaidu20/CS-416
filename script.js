@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("height", d => y1(0) - y1(d.AverageHighwayMPG))
             .attr("width", x1.bandwidth())
             .on("mouseover", showTooltip)
+            .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
 
         svg1.append("g")
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("height", d => y2(0) - y2(d.EngineCylinders))
             .attr("width", x2.bandwidth())
             .on("mouseover", showTooltip)
+            .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
 
         svg2.append("g")
@@ -121,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("r", 5)
             .attr("fill", "green")
             .on("mouseover", showTooltip)
+            .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
 
         svg3.append("g")
