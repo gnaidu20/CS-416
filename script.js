@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .padding(0.1);
 
         const y1 = d3.scaleLinear()
-            .domain([0, d3.max(data, d => +d.AvgMPG)]).nice()
+            .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]).nice()
             .range([height - margin.bottom, margin.top]);
 
         svg1.append("g")
@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .data(data)
             .join("rect")
             .attr("x", d => x1(d.Make))
-            .attr("y", d => y1(d.AvgMPG))
-            .attr("height", d => y1(0) - y1(d.AvgMPG))
+            .attr("y", d => y1(d.AverageHighwayMPG))
+            .attr("height", d => y1(0) - y1(d.AverageHighwayMPG))
             .attr("width", x1.bandwidth());
 
         svg1.append("g")
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .padding(0.1);
 
         const y2 = d3.scaleLinear()
-            .domain([0, d3.max(data, d => +d.Horsepower)]).nice()
+            .domain([0, d3.max(data, d => +d.EngineCylinders)]).nice()
             .range([height - margin.bottom, margin.top]);
 
         svg2.append("g")
@@ -68,8 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .data(data)
             .join("rect")
             .attr("x", d => x2(d.Make))
-            .attr("y", d => y2(d.Horsepower))
-            .attr("height", d => y2(0) - y2(d.Horsepower))
+            .attr("y", d => y2(d.EngineCylinders))
+            .attr("height", d => y2(0) - y2(d.EngineCylinders))
             .attr("width", x2.bandwidth());
 
         svg2.append("g")
@@ -83,24 +83,24 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
 
-        // Scene 3: Price vs Horsepower
+        // Scene 3: City MPG vs Highway MPG
         const svg3 = d3.select("#chart3").append("svg")
             .attr("viewBox", [0, 0, width, height]);
 
         const x3 = d3.scaleLinear()
-            .domain([0, d3.max(data, d => +d.Horsepower)]).nice()
+            .domain([0, d3.max(data, d => +d.AverageCityMPG)]).nice()
             .range([margin.left, width - margin.right]);
 
         const y3 = d3.scaleLinear()
-            .domain([0, d3.max(data, d => +d.AvgPrice)]).nice()
+            .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]).nice()
             .range([height - margin.bottom, margin.top]);
 
         svg3.append("g")
             .selectAll("circle")
             .data(data)
             .join("circle")
-            .attr("cx", d => x3(d.Horsepower))
-            .attr("cy", d => y3(d.AvgPrice))
+            .attr("cx", d => x3(d.AverageCityMPG))
+            .attr("cy", d => y3(d.AverageHighwayMPG))
             .attr("r", 5)
             .attr("fill", "green");
 
