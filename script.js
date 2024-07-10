@@ -47,6 +47,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function addAxisLabels(svg, width, height, margin, xlabel, ylabel) {
+        svg.append("text")
+            .attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", width / 2)
+            .attr("y", height - 6)
+            .style("fill", "white")
+            .text(xlabel);
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "end")
+            .attr("x", -height / 2)
+            .attr("y", 6)
+            .attr("dy", ".75em")
+            .attr("transform", "rotate(-90)")
+            .style("fill", "white")
+            .text(ylabel);
+    }
+
     // Wait until the data is loaded
     d3.csv("cars2017.csv").then(function(data) {
         const colorScale = d3.scaleOrdinal()
@@ -57,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const svg1 = d3.select("#chart1").append("svg");
         const width = 800;
         const height = 400;
-        const margin = {top: 20, right: 30, bottom: 30, left: 40};
+        const margin = {top: 20, right: 30, bottom: 50, left: 50};
 
         svg1.attr("viewBox", [0, 0, width, height]);
 
@@ -97,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("color", "white");
 
         addLegend(svg1, colorScale, width, height, margin);
+        addAxisLabels(svg1, width, height, margin, "Car Make", "Average Highway MPG");
 
         // Scene 2: Engine Cylinders Distribution
         const svg2 = d3.select("#chart2").append("svg")
@@ -138,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("color", "white");
 
         addLegend(svg2, colorScale, width, height, margin);
+        addAxisLabels(svg2, width, height, margin, "Car Make", "Engine Cylinders");
 
         // Scene 3: City MPG vs Highway MPG
         const svg3 = d3.select("#chart3").append("svg")
@@ -174,5 +196,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .style("color", "white");
 
         addLegend(svg3, colorScale, width, height, margin);
+        addAxisLabels(svg3, width, height, margin, "Average City MPG", "Average Highway MPG");
     });
 });
