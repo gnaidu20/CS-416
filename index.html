@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Narrative Visualization</title>
+    <title>CS-416 Project: Narrative Visualization</title>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         body {
@@ -14,10 +14,14 @@
         .scene.active {
             display: block;
         }
+        svg {
+            width: 100%;
+            height: 400px;
+        }
     </style>
 </head>
 <body>
-    <h1>Narrative Visualization of Car Data</h1>
+    <h1>Narrative Visualization of 2017 Car Data</h1>
     <div id="scene1" class="scene active">
         <h2>Scene 1: Overview of Car Data</h2>
         <div id="chart1"></div>
@@ -31,6 +35,7 @@
         <div id="chart3"></div>
     </div>
     <button id="nextButton">Next</button>
+    <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
