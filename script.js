@@ -169,12 +169,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const svg3 = d3.select("#chart3").append("svg")
             .attr("viewBox", [0, 0, width, height]);
 
-        const x3 = d3.scaleLog()
-            .domain([1, d3.max(data, d => +d.AverageCityMPG)]).nice()
+        const x3 = d3.scaleLinear()
+            .domain([0, d3.max(data, d => +d.AverageCityMPG)]).nice()
             .range([margin.left, width - margin.right]);
 
-        const y3 = d3.scaleLog()
-            .domain([1, d3.max(data, d => +d.AverageHighwayMPG)]).nice()
+        const y3 = d3.scaleLinear()
+            .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]).nice()
             .range([height - margin.bottom, margin.top]);
 
         svg3.append("g")
@@ -183,23 +183,23 @@ document.addEventListener("DOMContentLoaded", function () {
             .join("circle")
             .attr("cx", d => x3(d.AverageCityMPG))
             .attr("cy", d => y3(d.AverageHighwayMPG))
-            .attr("r", d => d.EngineCylinders * 2) // Adjust the multiplier for appropriate bubble size
+            .attr("r", 5)
             .attr("fill", d => colorScale(d.Fuel))
             .on("mouseover", showTooltip)
             .on("mousemove", showTooltip)
             .on("mouseout", hideTooltip);
 
         svg3.append("g")
-            .call(d3.axisLeft(y3).ticks(10, ",.1s"))
+            .call(d3.axisLeft(y3))
             .attr("transform", `translate(${margin.left},0)`)
             .style("color", "white");
 
         svg3.append("g")
-            .call(d3.axisBottom(x3).ticks(10, ",.1s"))
+            .call(d3.axisBottom(x3))
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .style("color", "white");
 
         addLegend(svg3, colorScale, width, height, margin);
-        addAxisLabels(svg3, width, height, margin, "Average City MPG (Log Scale)", "Average Highway MPG (Log Scale)");
+        addAxisLabels(svg3, width, height, margin, "Average City MPG", "Average Highway MPG");
     });
 });
