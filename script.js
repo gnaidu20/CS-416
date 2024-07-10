@@ -9,6 +9,19 @@ document.addEventListener("DOMContentLoaded", function () {
         scenes[currentScene].classList.add("active");
     });
 
+    const tooltip = d3.select("#tooltip");
+
+    function showTooltip(event, d) {
+        tooltip.transition().duration(200).style("opacity", .9);
+        tooltip.html(`Make: ${d.Make}<br>Highway MPG: ${d.AverageHighwayMPG}<br>City MPG: ${d.AverageCityMPG}`)
+            .style("left", (event.pageX + 5) + "px")
+            .style("top", (event.pageY - 28) + "px");
+    }
+
+    function hideTooltip() {
+        tooltip.transition().duration(500).style("opacity", 0);
+    }
+
     // Wait until the data is loaded
     d3.csv("cars2017.csv").then(function(data) {
         // Scene 1: Overview
@@ -36,7 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("x", d => x1(d.Make))
             .attr("y", d => y1(d.AverageHighwayMPG))
             .attr("height", d => y1(0) - y1(d.AverageHighwayMPG))
-            .attr("width", x1.bandwidth());
+            .attr("width", x1.bandwidth())
+            .on("mouseover", showTooltip)
+            .on("mouseout", hideTooltip);
 
         svg1.append("g")
             .call(d3.axisLeft(y1))
@@ -49,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("transform", "rotate(-45)")
             .style("text-anchor", "end");
 
-        // Scene 2: Horsepower Distribution
+        // Scene 2: Engine Cylinders Distribution
         const svg2 = d3.select("#chart2").append("svg")
             .attr("viewBox", [0, 0, width, height]);
 
@@ -70,7 +85,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("x", d => x2(d.Make))
             .attr("y", d => y2(d.EngineCylinders))
             .attr("height", d => y2(0) - y2(d.EngineCylinders))
-            .attr("width", x2.bandwidth());
+            .attr("width", x2.bandwidth())
+            .on("mouseover", showTooltip)
+            .on("mouseout", hideTooltip);
 
         svg2.append("g")
             .call(d3.axisLeft(y2))
@@ -102,7 +119,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("cx", d => x3(d.AverageCityMPG))
             .attr("cy", d => y3(d.AverageHighwayMPG))
             .attr("r", 5)
-            .attr("fill", "green");
+            .attr("fill", "green")
+            .on("mouseover", showTooltip)
+            .on("mouseout", hideTooltip);
 
         svg3.append("g")
             .call(d3.axisLeft(y3))
