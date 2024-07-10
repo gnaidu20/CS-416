@@ -67,32 +67,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .text(ylabel);
     }
 
-    function updateScatterPlot(selectedFuels) {
-        const svg3 = d3.select("#chart3 svg");
-        const filteredData = carData.filter(d => selectedFuels.includes(d.Fuel));
-
-        svg3.selectAll("circle")
-            .data(filteredData, d => d.Make)
-            .join(
-                enter => enter.append("circle")
-                    .attr("cx", d => x3(d.AverageCityMPG))
-                    .attr("cy", d => y3(d.AverageHighwayMPG))
-                    .attr("r", 5)
-                    .attr("fill", d => colorScale(d.Fuel))
-                    .on("mouseover", showTooltip)
-                    .on("mousemove", showTooltip)
-                    .on("mouseout", hideTooltip),
-                update => update
-                    .transition().duration(500)
-                    .attr("cx", d => x3(d.AverageCityMPG))
-                    .attr("cy", d => y3(d.AverageHighwayMPG))
-                    .attr("fill", d => colorScale(d.Fuel)),
-                exit => exit.remove()
-            );
-    }
-
+    // Wait until the data is loaded
     d3.csv("cars2017.csv").then(function(data) {
-        window.carData = data;
         const colorScale = d3.scaleOrdinal()
             .domain(["Gasoline", "Diesel", "Electricity"])
             .range(["steelblue", "orange", "green"]);
@@ -221,12 +197,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
         addLegend(svg3, colorScale, width, height, margin);
         addAxisLabels(svg3, width, height, margin, "Average City MPG", "Average Highway MPG");
-
-        document.querySelectorAll('.fuel-type').forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                const selectedFuels = Array.from(document.querySelectorAll('.fuel-type:checked')).map(cb => cb.value);
-                updateScatterPlot(selectedFuels);
-            });
-        });
     });
 });
