@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function addLegend(svg, colorScale, width, height, margin) {
         const legend = svg.append("g")
             .attr("class", "legend")
-            .attr("transform", `translate(${width - margin.right - 120}, ${margin.top})`);
+            .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
 
         const fuelTypes = colorScale.domain();
         const legendHeight = 20;
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "x label")
             .attr("text-anchor", "middle")
             .attr("x", width / 2)
-            .attr("y", height - margin.bottom / 3)
+            .attr("y", height - margin.bottom / 4)
             .style("fill", "white")
             .text(xlabel);
 
@@ -60,8 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("class", "y label")
             .attr("text-anchor", "middle")
             .attr("x", -height / 2)
-            .attr("y", margin.left / 4)
-            .attr("dy", "-0.75em")
+            .attr("y", margin.left / 3)
+            .attr("dy", "-1em")
             .attr("transform", "rotate(-90)")
             .style("fill", "white")
             .text(ylabel);
@@ -75,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Scene 1: Overview
         const svg1 = d3.select("#chart1").append("svg");
-        const width = 900;
+        const width = 1000;
         const height = 500;
-        const margin = {top: 20, right: 150, bottom: 80, left: 60};
+        const margin = {top: 20, right: 180, bottom: 100, left: 60};
 
         svg1.attr("viewBox", [0, 0, width, height]);
 
@@ -113,6 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .selectAll("text")
             .attr("transform", "rotate(-45)")
+            .attr("dx", "-0.8em")
+            .attr("dy", "0.15em")
             .style("text-anchor", "end")
             .style("color", "white");
 
@@ -155,6 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .selectAll("text")
             .attr("transform", "rotate(-45)")
+            .attr("dx", "-0.8em")
+            .attr("dy", "0.15em")
             .style("text-anchor", "end")
             .style("color", "white");
 
