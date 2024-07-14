@@ -229,7 +229,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]).nice()
             .range([height - margin.bottom, margin.top]);
 
-        svg3.append("g")
+        const g3 = svg3.append("g");
+
+        g3.append("g")
             .selectAll("circle")
             .data(data)
             .join("circle")
@@ -253,17 +255,32 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("r", 5);
             });
 
-        svg3.append("g")
+        g3.append("g")
             .call(d3.axisLeft(y3))
             .attr("transform", `translate(${margin.left},0)`)
             .style("color", "white");
 
-        svg3.append("g")
+        g3.append("g")
             .call(d3.axisBottom(x3))
             .attr("transform", `translate(0,${height - margin.bottom})`)
             .style("color", "white");
 
         addLegend(svg3, colorScale, width, height, margin);
         addAxisLabels(svg3, width, height, margin, "Average City MPG", "Average Highway MPG");
+
+        const zoom = d3.zoom()
+            .scaleExtent([1, 10])
+            .translateExtent([[0, 0], [width, height]])
+            .extent([[0, 0], [width, height]])
+            .on("zoom", zoomed);
+
+        svg3.call(zoom);
+
+        function zoomed(event) {
+            const {transform} = event;
+            g3.attr("transform", transform);
+            g3.attr("stroke-width", 1 / transform.k);
+            g3.selectAll("circle").attr("r", d => 5 / transform.k);
+        }
     });
 });
