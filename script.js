@@ -237,9 +237,21 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("cy", d => y3(d.AverageHighwayMPG))
             .attr("r", 5)
             .attr("fill", d => colorScale(d.Fuel))
-            .on("mouseover", showTooltip)
+            .on("mouseover", function(event, d) {
+                showTooltip(event, d);
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("r", 10);
+            })
             .on("mousemove", showTooltip)
-            .on("mouseout", hideTooltip);
+            .on("mouseout", function(event, d) {
+                hideTooltip();
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("r", 5);
+            });
 
         svg3.append("g")
             .call(d3.axisLeft(y3))
