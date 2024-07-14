@@ -99,9 +99,23 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("height", d => y1(0) - y1(d.AverageHighwayMPG))
             .attr("width", x1.bandwidth())
             .attr("fill", d => colorScale(d.Fuel))
-            .on("mouseover", showTooltip)
+            .on("mouseover", function(event, d) {
+                showTooltip(event, d);
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y1(d.AverageHighwayMPG) - 10)
+                    .attr("height", d => y1(0) - y1(d.AverageHighwayMPG) + 10);
+            })
             .on("mousemove", showTooltip)
-            .on("mouseout", hideTooltip);
+            .on("mouseout", function(event, d) {
+                hideTooltip();
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y1(d.AverageHighwayMPG))
+                    .attr("height", d => y1(0) - y1(d.AverageHighwayMPG));
+            });
 
         svg1.append("g")
             .call(d3.axisLeft(y1))
@@ -143,9 +157,23 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("height", d => y2(0) - y2(d.EngineCylinders))
             .attr("width", x2.bandwidth())
             .attr("fill", d => colorScale(d.Fuel))
-            .on("mouseover", showTooltip)
+            .on("mouseover", function(event, d) {
+                showTooltip(event, d);
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y2(d.EngineCylinders) - 10)
+                    .attr("height", d => y2(0) - y2(d.EngineCylinders) + 10);
+            })
             .on("mousemove", showTooltip)
-            .on("mouseout", hideTooltip);
+            .on("mouseout", function(event, d) {
+                hideTooltip();
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y2(d.EngineCylinders))
+                    .attr("height", d => y2(0) - y2(d.EngineCylinders));
+            });
 
         svg2.append("g")
             .call(d3.axisLeft(y2))
