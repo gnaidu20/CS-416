@@ -10,9 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
         currentScene = (currentScene + 1) % scenes.length;
         scenes[currentScene].classList.add("active");
         updateButtons();
-        if (currentScene === 1) {
-            startScene2Transition();
-        }
     });
 
     backButton.addEventListener("click", () => {
@@ -208,13 +205,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("height", d => y2(0) - y2(d.EngineCylinders));
             });
 
-        function startScene2Transition() {
-            bars2.transition()
-                .duration(3000)
-                .delay(1000)
-                .attr("height", d => y2(0) - y2(d.EngineCylinders))
-                .attr("y", d => y2(d.EngineCylinders));
-        }
+        bars2.transition()
+            .duration(3000)
+            .delay(1000)
+            .attr("height", d => y2(0) - y2(d.EngineCylinders))
+            .attr("y", d => y2(d.EngineCylinders));
 
         svg2.append("g")
             .call(d3.axisLeft(y2))
@@ -298,39 +293,44 @@ document.addEventListener("DOMContentLoaded", function () {
             g3.attr("transform", transform);
             g3.attr("stroke-width", 1 / transform.k);
             g3.selectAll("circle").attr("r", d => 5 / transform.k);
+            updateVoronoi(transform);
         }
 
         // Voronoi for Scene 3
-        const voronoi = d3.Delaunay.from(
-            data,
-            d => x3(d.AverageCityMPG),
-            d => y3(d.AverageHighwayMPG)
-        ).voronoi([0, 0, width, height]);
-
         const voronoiGroup = svg3.append("g")
             .attr("class", "voronoi");
 
-        voronoiGroup.selectAll("path")
-            .data(data)
-            .join("path")
-            .attr("d", (d, i) => voronoi.renderCell(i))
-            .style("fill", "none")
-            .style("pointer-events", "all")
-            .on("mouseover", function(event, d) {
-                const point = d;
-                showTooltip(event, point);
-                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
-                    .transition()
-                    .duration(200)
-                    .attr("r", 10);
-            })
-            .on("mouseout", function(event, d) {
-                const point = d;
-                hideTooltip();
-                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
-                    .transition()
-                    .duration(200)
-                    .attr("r", 5);
-            });
+        function updateVoronoi(transform) {
+            const voronoi = d3.Delaunay.from(
+                data,
+                d => transform.applyX(x3(d.AverageCityMPG)),
+                d => transform.applyY(y3(d.AverageHighwayMPG))
+            ).voronoi([0, 0, width, height]);
+
+            voronoiGroup.selectAll("path")
+                .data(data)
+                .join("path")
+                .attr("d", (d, i) => voronoi.renderCell(i))
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .on("mouseover", function(event, d) {
+                    const point = d;
+                    showTooltip(event, point);
+                    d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
+                        .transition()
+                        .duration(200)
+                        .attr("r", 10);
+                })
+                .on("mouseout", function(event, d) {
+                    const point = d;
+                    hideTooltip();
+                    d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
+                        .transition()
+                        .duration(200)
+                        .attr("r", 5);
+                });
+        }
+
+        updateVoronoi(d3.zoomIdentity);
     });
 });
