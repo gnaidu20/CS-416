@@ -260,23 +260,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Voronoi for Scene 3
-        const voronoi = d3.voronoi()
-            .x(d => x3(d.AverageCityMPG))
-            .y(d => y3(d.AverageHighwayMPG))
-            .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]]);
+        const voronoi = d3.Delaunay.from(
+            data,
+            d => x3(d.AverageCityMPG),
+            d => y3(d.AverageHighwayMPG)
+        ).voronoi([0, 0, width, height]);
 
         const voronoiGroup = svg3.append("g")
             .attr("class", "voronoi");
 
         voronoiGroup.selectAll("path")
-            .data(voronoi.polygons(data))
+            .data(data)
             .join("path")
-            .attr("d", d => d ? `M${d.join("L")}Z` : null)
+            .attr("d", (d, i) => voronoi.renderCell(i))
             .style("fill", "none")
             .style("pointer-events", "all")
             .style("stroke", "white") // Make Voronoi regions visible
             .on("mouseover", function(event, d) {
-                const point = d.data;
+                const point = d;
                 showTooltip(event, point);
                 d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
                     .transition()
@@ -284,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("r", 10);
             })
             .on("mouseout", function(event, d) {
-                const point = d.data;
+                const point = d;
                 hideTooltip();
                 d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
                     .transition()
