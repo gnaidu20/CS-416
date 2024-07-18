@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]).nice()
             .range([height - margin.bottom, margin.top]);
 
-        svg1.append("g")
+        const bars1 = svg1.append("g")
             .selectAll("rect")
             .data(data)
             .join("rect")
@@ -123,7 +123,25 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("height", 20)
             .attr("width", x1.bandwidth())
             .attr("fill", d => colorScale(d.Fuel))
-            .transition()
+            .on("mouseover", function(event, d) {
+                showTooltip(event, d);
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y1(d.AverageHighwayMPG) - 10)
+                    .attr("height", d => y1(0) - y1(d.AverageHighwayMPG) + 10);
+            })
+            .on("mousemove", showTooltip)
+            .on("mouseout", function(event, d) {
+                hideTooltip();
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y1(d.AverageHighwayMPG))
+                    .attr("height", d => y1(0) - y1(d.AverageHighwayMPG));
+            });
+
+        bars1.transition()
             .duration(3000)
             .delay(1000)
             .attr("height", d => y1(0) - y1(d.AverageHighwayMPG))
@@ -160,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .domain([0, d3.max(data, d => +d.EngineCylinders)]).nice()
             .range([height - margin.bottom, margin.top]);
 
-        svg2.append("g")
+        const bars2 = svg2.append("g")
             .selectAll("rect")
             .data(data)
             .join("rect")
@@ -169,7 +187,25 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("height", 20)
             .attr("width", x2.bandwidth())
             .attr("fill", d => colorScale(d.Fuel))
-            .transition()
+            .on("mouseover", function(event, d) {
+                showTooltip(event, d);
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y2(d.EngineCylinders) - 10)
+                    .attr("height", d => y2(0) - y2(d.EngineCylinders) + 10);
+            })
+            .on("mousemove", showTooltip)
+            .on("mouseout", function(event, d) {
+                hideTooltip();
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("y", d => y2(d.EngineCylinders))
+                    .attr("height", d => y2(0) - y2(d.EngineCylinders));
+            });
+
+        bars2.transition()
             .duration(3000)
             .delay(1000)
             .attr("height", d => y2(0) - y2(d.EngineCylinders))
