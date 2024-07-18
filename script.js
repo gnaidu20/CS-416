@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
         currentScene = (currentScene + 1) % scenes.length;
         scenes[currentScene].classList.add("active");
         updateButtons();
+        if (currentScene === 1) {
+            startScene2Transition();
+        }
     });
 
     backButton.addEventListener("click", () => {
@@ -205,11 +208,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     .attr("height", d => y2(0) - y2(d.EngineCylinders));
             });
 
-        bars2.transition()
-            .duration(3000)
-            .delay(1000)
-            .attr("height", d => y2(0) - y2(d.EngineCylinders))
-            .attr("y", d => y2(d.EngineCylinders));
+        function startScene2Transition() {
+            bars2.transition()
+                .duration(3000)
+                .delay(1000)
+                .attr("height", d => y2(0) - y2(d.EngineCylinders))
+                .attr("y", d => y2(d.EngineCylinders));
+        }
 
         svg2.append("g")
             .call(d3.axisLeft(y2))
