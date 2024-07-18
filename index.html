@@ -48,15 +48,20 @@
             padding: 10px 20px;
             margin: 0 10px;
             font-size: 16px;
+            border: none;
+            background-color: #444;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
 <body>
     <h1>2017 Car Performance: Make, Fuel Efficiency and Engine Insight Story</h1>
-    <div class="button-container">
-        <button id="backButton" style="display: none;">Back</button>
-        <button id="nextButton">Next</button>
-    </div>
     <div id="scene1" class="scene active">
         <h2>Scene 1: Overview of Car Data</h2>
         <div id="chart1"></div>
@@ -71,6 +76,10 @@
         <h2>Scene 3: City MPG vs Highway MPG</h2>
         <div id="chart3"></div>
         <div id="legend3" class="legend"></div>
+    </div>
+    <div class="button-container">
+        <button id="backButton" style="display: none;">Back</button>
+        <button id="nextButton">Next</button>
     </div>
     <div class="tooltip" id="tooltip"></div>
     <script src="data.js"></script>
