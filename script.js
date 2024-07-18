@@ -282,5 +282,37 @@ document.addEventListener("DOMContentLoaded", function () {
             g3.attr("stroke-width", 1 / transform.k);
             g3.selectAll("circle").attr("r", d => 5 / transform.k);
         }
+
+        // Voronoi for Scene 3
+        const voronoi = d3.voronoi()
+            .x(d => x3(d.AverageCityMPG))
+            .y(d => y3(d.AverageHighwayMPG))
+            .extent([[margin.left, margin.top], [width - margin.right, height - margin.bottom]]);
+
+        const voronoiGroup = svg3.append("g")
+            .attr("class", "voronoi");
+
+        voronoiGroup.selectAll("path")
+            .data(voronoi.polygons(data))
+            .join("path")
+            .attr("d", d => d ? `M${d.join("L")}Z` : null)
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .on("mouseover", function(event, d) {
+                const point = d.data;
+                showTooltip(event, point);
+                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
+                    .transition()
+                    .duration(200)
+                    .attr("r", 10);
+            })
+            .on("mouseout", function(event, d) {
+                const point = d.data;
+                hideTooltip();
+                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
+                    .transition()
+                    .duration(200)
+                    .attr("r", 5);
+            });
     });
 });
