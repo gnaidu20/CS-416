@@ -293,39 +293,53 @@ document.addEventListener("DOMContentLoaded", function () {
             g3.attr("transform", transform);
             g3.attr("stroke-width", 1 / transform.k);
             g3.selectAll("circle").attr("r", d => 5 / transform.k);
+            updateVoronoi();
         }
 
-        // Voronoi for Scene 3
-        const voronoi = d3.Delaunay.from(
-            data,
-            d => x3(d.AverageCityMPG),
-            d => y3(d.AverageHighwayMPG)
-        ).voronoi([0, 0, width, height]);
+        function updateVoronoi() {
+            const voronoi = d3.Delaunay.from(
+                data.map(d => ({
+                    x: x3(d.AverageCityMPG),
+                    y: y3(d.AverageHighwayMPG)
+                })),
+                d => d.x,
+                d => d.y
+            ).voronoi([0, 0, width, height]);
 
-        const voronoiGroup = svg3.append("g")
-            .attr("class", "voronoi");
+            const voronoiGroup = g3.select(".voronoi");
 
-        voronoiGroup.selectAll("path")
-            .data(data)
-            .join("path")
-            .attr("d", (d, i) => voronoi.renderCell(i))
-            .style("fill", "none")
-            .style("pointer-events", "all")
-            .on("mouseover", function(event, d) {
-                const point = d;
-                showTooltip(event, point);
-                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
-                    .transition()
-                    .duration(200)
-                    .attr("r", 10);
-            })
-            .on("mouseout", function(event, d) {
-                const point = d;
-                hideTooltip();
-                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
-                    .transition()
-                    .duration(200)
-                    .attr("r", 5);
-            });
+            if (voronoiGroup.empty()) {
+                g3.append("g")
+                    .attr("class", "voronoi");
+            } else {
+                voronoiGroup.selectAll("path").remove();
+            }
+
+            g3.select(".voronoi").selectAll("path")
+                .data(data)
+                .join("path")
+                .attr("d", (d, i) => voronoi.renderCell(i))
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .style("stroke", "white") // Make Voronoi regions visible
+                .on("mouseover", function(event, d) {
+                    const point = d;
+                    showTooltip(event, point);
+                    d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
+                        .transition()
+                        .duration(200)
+                        .attr("r", 10);
+                })
+                .on("mouseout", function(event, d) {
+                    const point = d;
+                    hideTooltip();
+                    d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
+                        .transition()
+                        .duration(200)
+                        .attr("r", 5);
+                });
+        }
+
+        updateVoronoi(); // Initial Voronoi
     });
 });
