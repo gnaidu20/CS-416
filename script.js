@@ -275,7 +275,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("d", (d, i) => voronoi.renderCell(i))
             .style("fill", "none")
             .style("pointer-events", "all")
-            .style("stroke", "white") // Make Voronoi regions visible
             .on("mouseover", function(event, d) {
                 const point = d;
                 showTooltip(event, point);
