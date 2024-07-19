@@ -359,6 +359,10 @@ document.addEventListener("DOMContentLoaded", function () {
             updateChart3(filteredData);
         });
 
+        d3.select("#refreshButton").on("click", () => {
+            updateChart3(data);
+        });
+
         updateChart3(data); // Initial Chart
     });
 });
