@@ -9,9 +9,6 @@
             font-family: Arial, sans-serif;
             background-color: black;
             color: white;
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
         }
         .scene {
             display: none;
@@ -49,53 +46,47 @@
         }
         button {
             padding: 10px 20px;
-            margin: 5px;
-            background-color: #444;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #666;
+            margin: 0 10px;
+            font-size: 16px;
         }
         .filter-container {
-            width: 200px;
-            margin-left: 20px;
+            position: absolute;
+            right: 20px;
+            top: 150px;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
         }
-        .filter-container select {
-            width: 100%;
-            height: 150px;
+        .filter-container h3 {
+            margin-top: 0;
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>2017 Car Performance: Make, Fuel Efficiency and Engine Insight Story</h1>
-        <div id="scene1" class="scene active">
-            <h2>Scene 1: Overview of Car Data</h2>
-            <div id="chart1"></div>
-            <div id="legend1" class="legend"></div>
-        </div>
-        <div id="scene2" class="scene">
-            <h2>Scene 2: Engine Cylinders Distribution</h2>
-            <div id="chart2"></div>
-            <div id="legend2" class="legend"></div>
-        </div>
-        <div id="scene3" class="scene">
-            <h2>Scene 3: City MPG vs Highway MPG</h2>
-            <div id="chart3"></div>
-            <div id="legend3" class="legend"></div>
-        </div>
-        <div class="button-container">
-            <button id="backButton" style="display: none;">Back</button>
-            <button id="nextButton">Next</button>
-        </div>
+    <h1>2017 Car Performance: Make, Fuel Efficiency and Engine Insight Story</h1>
+    <div class="button-container">
+        <button id="backButton" style="display: none;">Back</button>
+        <button id="nextButton">Next</button>
     </div>
-    <div class="filter-container">
-        <h3>Filter by Car Make</h3>
-        <select id="makeFilter" multiple>
-            <!-- Options will be dynamically added here -->
-        </select>
+    <div id="scene1" class="scene active">
+        <h2>Scene 1: Overview of Car Data</h2>
+        <div id="chart1"></div>
+        <div id="legend1" class="legend"></div>
+    </div>
+    <div id="scene2" class="scene">
+        <h2>Scene 2: Engine Cylinders Distribution</h2>
+        <div id="chart2"></div>
+        <div id="legend2" class="legend"></div>
+    </div>
+    <div id="scene3" class="scene">
+        <h2>Scene 3: City MPG vs Highway MPG</h2>
+        <div id="chart3"></div>
+        <div id="legend3" class="legend"></div>
+        <div class="filter-container">
+            <h3>Filter by Car Make</h3>
+            <select id="carMakeFilter" multiple></select>
+            <button id="applyFilterButton">Apply Filter</button>
+        </div>
     </div>
     <div class="tooltip" id="tooltip"></div>
     <script src="data.js"></script>
