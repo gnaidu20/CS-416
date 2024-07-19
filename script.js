@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .attr("d", (d, i) => voronoi.renderCell(i))
             .style("fill", "none")
             .style("pointer-events", "all")
-            .style("stroke", "white")
             .on("mouseover", function(event, d) {
                 const point = d;
                 showTooltip(event, point);
@@ -346,35 +345,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const carMakes = [...new Set(data.map(d => d.Make))];
 
-        const filterContainer = d3.select("body")
-            .append("div")
-            .style("position", "absolute")
-            .style("top", "100px")
-            .style("right", "20px")
-            .style("padding", "10px")
-            .style("background-color", "rgba(0, 0, 0, 0.7)")
-            .style("border-radius", "8px")
-            .style("color", "white")
-            .style("z-index", "1000");
-
-        filterContainer.append("h3").text("Filter by Car Make");
-
-        const carMakeFilter = filterContainer.append("select")
-            .attr("id", "carMakeFilter")
-            .attr("multiple", "")
-            .style("width", "150px")
-            .style("height", "100px");
+        const carMakeFilter = d3.select("#carMakeFilter");
 
         carMakes.forEach(make => {
             carMakeFilter.append("option")
                 .attr("value", make)
                 .text(make);
         });
-
-        filterContainer.append("button")
-            .attr("id", "applyFilterButton")
-            .text("Apply Filter")
-            .style("margin-top", "10px");
 
         d3.select("#applyFilterButton").on("click", () => {
             const selectedMakes = Array.from(carMakeFilter.node().selectedOptions, option => option.value);
