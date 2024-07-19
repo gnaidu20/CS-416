@@ -64,15 +64,16 @@
             height: 150px;
             margin-bottom: 10px;
         }
-        #applyFilterButton {
+        #applyFilterButton, #refreshButton {
             width: 100%;
             padding: 10px;
             background-color: lightgray;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 5px;
         }
-        #applyFilterButton:hover {
+        #applyFilterButton:hover, #refreshButton:hover {
             background-color: darkgray;
         }
     </style>
@@ -101,6 +102,7 @@
             <label for="carMakeFilter">Filter by Car Make</label>
             <select id="carMakeFilter" multiple></select>
             <button id="applyFilterButton">Apply Filter</button>
+            <button id="refreshButton">Refresh</button>
         </div>
     </div>
     <div class="tooltip" id="tooltip"></div>
