@@ -287,9 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const g3 = svg3.append("g");
 
-        let filteredData = data;
-
-        const updateChart3 = () => {
+        const updateChart3 = (filteredData) => {
             g3.selectAll("circle").remove();
             g3.selectAll("circle")
                 .data(filteredData)
@@ -358,10 +356,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         d3.select("#applyFilterButton").on("click", () => {
             const selectedMakes = Array.from(carMakeFilter.node().selectedOptions, option => option.value);
-            filteredData = selectedMakes.length > 0 ? data.filter(d => selectedMakes.includes(d.Make)) : data;
-            updateChart3();
+            const filteredData = selectedMakes.length > 0 ? data.filter(d => selectedMakes.includes(d.Make)) : data;
+            updateChart3(filteredData);
         });
 
-        updateChart3(); // Initial Chart
+        updateChart3(data); // Initial Chart
     });
 });
