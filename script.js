@@ -345,13 +345,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const carMakes = [...new Set(data.map(d => d.Make))];
 
-        const carMakeFilter = d3.select("#carMakeFilter");
+        const filterContainer = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("top", "120px")
+            .style("right", "30px")
+            .style("padding", "5px")
+            .style("background-color", "rgba(0, 0, 0, 0.7)")
+            .style("border-radius", "8px")
+            .style("color", "white")
+            .style("z-index", "1000");
+
+        filterContainer.append("h3").text("Filter by Car Make").style("font-size", "14px");
+
+        const carMakeFilter = filterContainer.append("select")
+            .attr("id", "carMakeFilter")
+            .attr("multiple", "")
+            .style("width", "100px")
+            .style("height", "60px");
 
         carMakes.forEach(make => {
             carMakeFilter.append("option")
                 .attr("value", make)
                 .text(make);
         });
+
+        filterContainer.append("button")
+            .attr("id", "applyFilterButton")
+            .text("Apply Filter")
+            .style("margin-top", "5px")
+            .style("font-size", "12px");
 
         d3.select("#applyFilterButton").on("click", () => {
             const selectedMakes = Array.from(carMakeFilter.node().selectedOptions, option => option.value);
