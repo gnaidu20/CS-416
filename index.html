@@ -51,14 +51,21 @@
         }
         .filter-container {
             position: absolute;
-            right: 20px;
-            top: 150px;
-            background-color: #333;
+            right: 50px;
+            top: 100px;
+            background-color: rgba(0, 0, 0, 0.8);
             padding: 10px;
             border-radius: 5px;
+            color: white;
+            z-index: 1000;
         }
-        .filter-container h3 {
-            margin-top: 0;
+        .filter-container select {
+            width: 150px;
+            height: 100px;
+        }
+        .filter-container button {
+            margin-top: 10px;
+            width: 100%;
         }
     </style>
 </head>
@@ -83,7 +90,7 @@
         <div id="chart3"></div>
         <div id="legend3" class="legend"></div>
         <div class="filter-container">
-            <h3>Filter by Car Make</h3>
+            <label for="carMakeFilter">Filter by Car Make</label>
             <select id="carMakeFilter" multiple></select>
             <button id="applyFilterButton">Apply Filter</button>
         </div>
