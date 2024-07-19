@@ -91,65 +91,11 @@ document.addEventListener("DOMContentLoaded", function () {
             .text(ylabel);
     }
 
-    function updateScene3(filteredData) {
-        const svg3 = d3.select("#chart3 svg");
-        const width = 1000;
-        const height = 500;
-        const margin = {top: 20, right: 180, bottom: 100, left: 60};
-
-        const x3 = d3.scaleLinear()
-            .domain([0, d3.max(filteredData, d => +d.AverageCityMPG)]).nice()
-            .range([margin.left, width - margin.right]);
-
-        const y3 = d3.scaleLinear()
-            .domain([0, d3.max(filteredData, d => +d.AverageHighwayMPG)]).nice()
-            .range([height - margin.bottom, margin.top]);
-
-        const g3 = svg3.select("g");
-
-        const circles = g3.selectAll("circle")
-            .data(filteredData, d => d.Make);
-
-        circles.enter()
-            .append("circle")
-            .attr("cx", d => x3(d.AverageCityMPG))
-            .attr("cy", d => y3(d.AverageHighwayMPG))
-            .attr("r", 5)
-            .attr("fill", d => colorScale(d.Fuel))
-            .on("mouseover", function(event, d) {
-                showTooltip(event, d);
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .attr("r", 10);
-            })
-            .on("mousemove", showTooltip)
-            .on("mouseout", function(event, d) {
-                hideTooltip();
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .attr("r", 5);
-            });
-
-        circles.transition()
-            .duration(750)
-            .attr("cx", d => x3(d.AverageCityMPG))
-            .attr("cy", d => y3(d.AverageHighwayMPG))
-            .attr("r", 5)
-            .attr("fill", d => colorScale(d.Fuel));
-
-        circles.exit().remove();
-
-        g3.select(".voronoi").remove();
-        updateVoronoi(filteredData);
-    }
-
-    function updateVoronoi(filteredData) {
+    function updateVoronoi(g3, data, xScale, yScale, width, height) {
         const voronoi = d3.Delaunay.from(
-            filteredData.map(d => ({
-                x: x3(d.AverageCityMPG),
-                y: y3(d.AverageHighwayMPG)
+            data.map(d => ({
+                x: xScale(d.AverageCityMPG),
+                y: yScale(d.AverageHighwayMPG)
             })),
             d => d.x,
             d => d.y
@@ -165,15 +111,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         g3.select(".voronoi").selectAll("path")
-            .data(filteredData)
+            .data(data)
             .join("path")
             .attr("d", (d, i) => voronoi.renderCell(i))
             .style("fill", "none")
             .style("pointer-events", "all")
+            .style("stroke", "white")
             .on("mouseover", function(event, d) {
                 const point = d;
                 showTooltip(event, point);
-                d3.select(g3.selectAll("circle").nodes()[filteredData.indexOf(point)])
+                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
                     .transition()
                     .duration(200)
                     .attr("r", 10);
@@ -181,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .on("mouseout", function(event, d) {
                 const point = d;
                 hideTooltip();
-                d3.select(g3.selectAll("circle").nodes()[filteredData.indexOf(point)])
+                d3.select(g3.selectAll("circle").nodes()[data.indexOf(point)])
                     .transition()
                     .duration(200)
                     .attr("r", 5);
@@ -193,25 +140,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const colorScale = d3.scaleOrdinal()
             .domain(["Gasoline", "Diesel", "Electricity"])
             .range(["steelblue", "orange", "green"]);
-
-        // Populate the filter options
-        const makeFilter = d3.select("#makeFilter");
-        const makes = Array.from(new Set(data.map(d => d.Make))).sort();
-        makeFilter.selectAll("option")
-            .data(makes)
-            .enter()
-            .append("option")
-            .text(d => d)
-            .attr("value", d => d);
-
-        makeFilter.on("change", function() {
-            const selectedMakes = Array.from(this.selectedOptions).map(option => option.value);
-            const filteredData = data.filter(d => selectedMakes.includes(d.Make));
-            updateScene3(filteredData);
-        });
-
-        // Initial update
-        updateScene3(data);
 
         // Scene 1: Overview
         const svg1 = d3.select("#chart1").append("svg");
@@ -359,29 +287,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const g3 = svg3.append("g");
 
-        g3.append("g")
-            .selectAll("circle")
-            .data(data)
-            .join("circle")
-            .attr("cx", d => x3(d.AverageCityMPG))
-            .attr("cy", d => y3(d.AverageHighwayMPG))
-            .attr("r", 5)
-            .attr("fill", d => colorScale(d.Fuel))
-            .on("mouseover", function(event, d) {
-                showTooltip(event, d);
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .attr("r", 10);
-            })
-            .on("mousemove", showTooltip)
-            .on("mouseout", function(event, d) {
-                hideTooltip();
-                d3.select(this)
-                    .transition()
-                    .duration(200)
-                    .attr("r", 5);
-            });
+        let filteredData = data;
+
+        const updateChart3 = () => {
+            g3.selectAll("circle").remove();
+            g3.selectAll("circle")
+                .data(filteredData)
+                .join("circle")
+                .attr("cx", d => x3(d.AverageCityMPG))
+                .attr("cy", d => y3(d.AverageHighwayMPG))
+                .attr("r", 5)
+                .attr("fill", d => colorScale(d.Fuel))
+                .on("mouseover", function(event, d) {
+                    showTooltip(event, d);
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("r", 10);
+                })
+                .on("mousemove", showTooltip)
+                .on("mouseout", function(event, d) {
+                    hideTooltip();
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("r", 5);
+                });
+            
+            updateVoronoi(g3, filteredData, x3, y3, width, height);
+        };
 
         g3.append("g")
             .call(d3.axisLeft(y3))
@@ -409,52 +343,25 @@ document.addEventListener("DOMContentLoaded", function () {
             g3.attr("transform", transform);
             g3.attr("stroke-width", 1 / transform.k);
             g3.selectAll("circle").attr("r", d => 5 / transform.k);
-            updateVoronoi();
+            updateVoronoi(g3, filteredData, x3, y3, width, height);
         }
 
-        function updateVoronoi(filteredData = data) {
-            const voronoi = d3.Delaunay.from(
-                filteredData.map(d => ({
-                    x: x3(d.AverageCityMPG),
-                    y: y3(d.AverageHighwayMPG)
-                })),
-                d => d.x,
-                d => d.y
-            ).voronoi([0, 0, width, height]);
+        const carMakes = [...new Set(data.map(d => d.Make))];
 
-            const voronoiGroup = g3.select(".voronoi");
+        const carMakeFilter = d3.select("#carMakeFilter");
 
-            if (voronoiGroup.empty()) {
-                g3.append("g")
-                    .attr("class", "voronoi");
-            } else {
-                voronoiGroup.selectAll("path").remove();
-            }
+        carMakes.forEach(make => {
+            carMakeFilter.append("option")
+                .attr("value", make)
+                .text(make);
+        });
 
-            g3.select(".voronoi").selectAll("path")
-                .data(filteredData)
-                .join("path")
-                .attr("d", (d, i) => voronoi.renderCell(i))
-                .style("fill", "none")
-                .style("pointer-events", "all")
-                .on("mouseover", function(event, d) {
-                    const point = d;
-                    showTooltip(event, point);
-                    d3.select(g3.selectAll("circle").nodes()[filteredData.indexOf(point)])
-                        .transition()
-                        .duration(200)
-                        .attr("r", 10);
-                })
-                .on("mouseout", function(event, d) {
-                    const point = d;
-                    hideTooltip();
-                    d3.select(g3.selectAll("circle").nodes()[filteredData.indexOf(point)])
-                        .transition()
-                        .duration(200)
-                        .attr("r", 5);
-                });
-        }
+        d3.select("#applyFilterButton").on("click", () => {
+            const selectedMakes = Array.from(carMakeFilter.node().selectedOptions, option => option.value);
+            filteredData = selectedMakes.length > 0 ? data.filter(d => selectedMakes.includes(d.Make)) : data;
+            updateChart3();
+        });
 
-        updateVoronoi(); // Initial Voronoi
+        updateChart3(); // Initial Chart
     });
 });
