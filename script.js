@@ -1,64 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const scenes = document.querySelectorAll(".scene");
-    let currentScene = 0;
 
-    const nextButton = document.getElementById("nextButton");
-    const backButton = document.getElementById("backButton");
-
-    nextButton.addEventListener("click", () => {
-        scenes[currentScene].classList.remove("active");
-        currentScene = (currentScene + 1) % scenes.length;
-        scenes[currentScene].classList.add("active");
-        updateButtons();
-    });
-
-    backButton.addEventListener("click", () => {
-        scenes[currentScene].classList.remove("active");
-        currentScene = (currentScene - 1 + scenes.length) % scenes.length;
-        scenes[currentScene].classList.add("active");
-        updateButtons();
-    });
-
-    function updateButtons() {
-        if (currentScene === 0) {
-            backButton.style.display = "none";
-        } else {
-            backButton.style.display = "inline-block";
-        }
-
-        if (currentScene === scenes.length - 1) {
-            nextButton.textContent = "Restart";
-        } else {
-            nextButton.textContent = "Next";
-        }
-    }
-
-    const tooltip = d3.select("#tooltip");
-
-    function showTooltip(event, d) {
-        tooltip.transition().duration(200).style("opacity", .9);
-        tooltip.html(`Make: ${d.Make}<br>Fuel: ${d.Fuel}<br>Engine Cylinders: ${d.EngineCylinders}<br>Highway MPG: ${d.AverageHighwayMPG}<br>City MPG: ${d.AverageCityMPG}`)
-            .style("left", (event.pageX + 5) + "px")
-            .style("top", (event.pageY - 28) + "px");
-    }
-
-    function hideTooltip() {
-        tooltip.transition().duration(500).style("opacity", 0);
-    }
-
-    function addLegend(svg, colorScale, width, height, margin) {
-        const legend = svg.append("g")
-            .attr("class", "legend")
-            .attr("transform", `translate(${width - margin.right + 10}, ${margin.top})`);
-
-        const fuelTypes = colorScale.domain();
-        const legendHeight = 20;
-
-        fuelTypes.forEach((fuel, i) => {
-            legend.append("rect")
-                .attr("x", 0)
-                .attr("y", i * legendHeight)
-                .attr("width", 10)
                 .attr("height", 10)
                 .style("fill", colorScale(fuel));
 
@@ -345,36 +285,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const carMakes = [...new Set(data.map(d => d.Make))];
 
-        const filterContainer = d3.select("body")
-            .append("div")
-            .style("position", "absolute")
-            .style("top", "120px")
-            .style("right", "30px")
-            .style("padding", "5px")
-            .style("background-color", "rgba(0, 0, 0, 0.7)")
-            .style("border-radius", "8px")
-            .style("color", "white")
-            .style("z-index", "1000");
-
-        filterContainer.append("h3").text("Filter by Car Make").style("font-size", "14px");
-
-        const carMakeFilter = filterContainer.append("select")
-            .attr("id", "carMakeFilter")
-            .attr("multiple", "")
-            .style("width", "100px")
-            .style("height", "60px");
+        const carMakeFilter = d3.select("#carMakeFilter");
 
         carMakes.forEach(make => {
             carMakeFilter.append("option")
                 .attr("value", make)
                 .text(make);
         });
-
-        filterContainer.append("button")
-            .attr("id", "applyFilterButton")
-            .text("Apply Filter")
-            .style("margin-top", "5px")
-            .style("font-size", "12px");
 
         d3.select("#applyFilterButton").on("click", () => {
             const selectedMakes = Array.from(carMakeFilter.node().selectedOptions, option => option.value);
